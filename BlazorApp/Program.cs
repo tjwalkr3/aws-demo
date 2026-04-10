@@ -1,6 +1,16 @@
 using BlazorApp.Components;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dataProtectionKeysPath = builder.Configuration["DATA_PROTECTION_KEYS_PATH"]
+    ?? "/home/app/.aspnet/DataProtection-Keys";
+
+Directory.CreateDirectory(dataProtectionKeysPath);
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
+    .SetApplicationName("BlazorApp");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

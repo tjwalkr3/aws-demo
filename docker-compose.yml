@@ -3,5 +3,12 @@ services:
     build:
       context: ./BlazorApp
       dockerfile: Dockerfile
+    environment:
+      - DATA_PROTECTION_KEYS_PATH=/home/app/.aspnet/DataProtection-Keys
     ports:
       - "9999:8080"
+    volumes:
+      - antiforgery_keys:/home/app/.aspnet/DataProtection-Keys
+
+volumes:
+  antiforgery_keys:

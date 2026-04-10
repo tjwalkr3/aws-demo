@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dataProtectionKeysPath = builder.Configuration["DATA_PROTECTION_KEYS_PATH"]
-    ?? "/home/app/.aspnet/DataProtection-Keys";
+var dataProtectionKeysPath =
+    builder.Configuration["DATA_PROTECTION_KEYS_PATH"] ?? "/home/app/.aspnet/DataProtection-Keys";
 
 Directory.CreateDirectory(dataProtectionKeysPath);
 
-builder.Services.AddDataProtection()
+builder
+    .Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
     .SetApplicationName("BlazorApp");
 
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -26,7 +26,6 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();

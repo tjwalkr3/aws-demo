@@ -1,0 +1,7 @@
+services:
+  blazorapp:
+    build:
+      context: ./BlazorApp
+      dockerfile: Dockerfile
+    ports:
+      - "9999:8080"

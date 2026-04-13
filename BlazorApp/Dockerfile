@@ -10,7 +10,7 @@ RUN dotnet publish "BlazorApp.csproj" -c Release -o /app/publish /p:UseAppHost=f
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
-ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
 
 COPY --from=build /app/publish .

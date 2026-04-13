@@ -1,4 +1,5 @@
 using BlazorApp.Components;
+using BlazorApp.Components.Pages.Home;
 using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder
     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
     .SetApplicationName("BlazorApp");
 
+builder.Services.AddScoped<IBucketService, BucketService>();
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 var app = builder.Build();

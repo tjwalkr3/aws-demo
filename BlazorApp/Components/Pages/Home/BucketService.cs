@@ -47,14 +47,16 @@ public sealed class BucketService : IBucketService
             );
 
             files.AddRange(
-                response.S3Objects.Select(file => new BucketFileDto
-                {
-                    Key = file.Key,
-                    FileName = Path.GetFileName(file.Key),
-                    LastModifiedUtc = file.LastModified.HasValue
-                        ? new DateTimeOffset(file.LastModified.Value)
-                        : DateTimeOffset.MinValue,
-                })
+                (response.S3Objects ?? [])
+                    .Where(file => !string.IsNullOrWhiteSpace(file.Key))
+                    .Select(file => new BucketFileDto
+                    {
+                        Key = file.Key!,
+                        FileName = Path.GetFileName(file.Key) ?? file.Key!,
+                        LastModifiedUtc = file.LastModified.HasValue
+                            ? new DateTimeOffset(file.LastModified.Value)
+                            : DateTimeOffset.MinValue,
+                    })
             );
 
             continuationToken =

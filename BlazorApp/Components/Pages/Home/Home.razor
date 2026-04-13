@@ -3,6 +3,50 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>S3 Files</h1>
 
-Welcome to your new app.
+<div>
+	<InputFile OnChange="UploadAsync" disabled="@IsLoading" />
+</div>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+	<p>@ErrorMessage</p>
+}
+
+<table>
+	<thead>
+		<tr>
+			<th>File Name</th>
+			<th>Download</th>
+			<th>Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Files.Count == 0)
+		{
+			<tr>
+				<td colspan="3">No files found.</td>
+			</tr>
+		}
+		else
+		{
+			@foreach (var file in Files)
+			{
+				<tr>
+					<td>@file.FileName</td>
+					<td>
+						<button @onclick="() => DownloadAsync(file.Key)" disabled="@IsLoading">
+							Download
+						</button>
+					</td>
+					<td>
+						<button @onclick="() => DeleteAsync(file.Key)" disabled="@IsLoading">
+							Delete
+						</button>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>

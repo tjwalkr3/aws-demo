@@ -5,4 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="4.0.21.1" />
+  </ItemGroup>
 </Project>

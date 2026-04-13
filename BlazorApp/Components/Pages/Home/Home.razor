@@ -14,6 +14,11 @@
 	<p>@ErrorMessage</p>
 }
 
+@if (!string.IsNullOrWhiteSpace(StatusMessage))
+{
+	<p class="status">@StatusMessage</p>
+}
+
 <table>
 	<thead>
 		<tr>

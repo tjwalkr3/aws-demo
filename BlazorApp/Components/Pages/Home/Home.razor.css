@@ -13,6 +13,10 @@ p {
     color: #9b1c1c;
 }
 
+p.status {
+    color: #1f2d4a;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;

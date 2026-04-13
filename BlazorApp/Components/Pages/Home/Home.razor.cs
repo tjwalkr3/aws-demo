@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 
 namespace BlazorApp.Components.Pages.Home;
 
@@ -11,15 +12,17 @@ public partial class Home : ComponentBase
     private IBucketService BucketService { get; set; } = default!;
 
     [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
+    private IJSRuntime JsRuntime { get; set; } = default!;
 
     private IReadOnlyList<BucketFileDto> _files = [];
     private bool _isLoading;
     private string? _errorMessage;
+    private string? _statusMessage;
 
     protected IReadOnlyList<BucketFileDto> Files => _files;
     protected bool IsLoading => _isLoading;
     protected string? ErrorMessage => _errorMessage;
+    protected string? StatusMessage => _statusMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,14 +57,23 @@ public partial class Home : ComponentBase
 
         try
         {
+            _isLoading = true;
             _errorMessage = null;
+            _statusMessage = $"Uploading {file.Name}...";
+            StateHasChanged();
             await using var stream = file.OpenReadStream(MaxUploadBytes);
             await BucketService.UploadFileAsync(file.Name, stream, file.ContentType);
-            await RefreshAsync();
+            _files = await BucketService.ListFilesAsync();
+            _statusMessage = $"Uploaded {file.Name}.";
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
+            _statusMessage = null;
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 
@@ -69,13 +81,21 @@ public partial class Home : ComponentBase
     {
         try
         {
+            _isLoading = true;
             _errorMessage = null;
+            _statusMessage = "Deleting file...";
             await BucketService.DeleteFileAsync(key);
-            await RefreshAsync();
+            _files = await BucketService.ListFilesAsync();
+            _statusMessage = "File deleted.";
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
+            _statusMessage = null;
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 
@@ -85,7 +105,7 @@ public partial class Home : ComponentBase
         {
             _errorMessage = null;
             var url = await BucketService.GetDownloadUrlAsync(key);
-            NavigationManager.NavigateTo(url, forceLoad: true);
+            await JsRuntime.InvokeVoidAsync("open", url, "_blank");
         }
         catch (Exception ex)
         {

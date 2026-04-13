@@ -1,4 +1,4 @@
-namespace BlazorApp.Components.Pages;
+namespace BlazorApp.Components.Pages.Home;
 
 public interface IBucketService
 {

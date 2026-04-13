@@ -3,8 +3,14 @@ services:
     build:
       context: ./BlazorApp
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
       - DATA_PROTECTION_KEYS_PATH=/home/app/.aspnet/DataProtection-Keys
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
     ports:
       - "9999:8080"
     volumes:
